@@ -6,9 +6,13 @@ class TitleScene extends Phaser.Scene {
 	
 	preload() {
 		this.load.image('background', 'assets/sky.png');
+		this.load.audio('backgroundMusic', 'assets/music/backgroundmusic.mp3');
 	}
 	
 	create() {
+		this.backgroundMusic = this.sound.add('backgroundMusic', {volume : 1});
+		this.backgroundMusic.loop = true;
+		this.backgroundMusic.play();
 		var bg = this.add.sprite(0, 0, 'background');
 		bg.setOrigin(0,0);
 
