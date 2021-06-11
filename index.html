@@ -1,0 +1,24 @@
+<!doctype html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8" />
+        <title>Kelompok 3</title>
+        <script src="assets/phaser.js"></script>
+        <script type="module" src = "Game.js"></script>
+        <style type="text/css">
+            body {
+            margin: 0;
+            }
+        </style>
+    </head>
+    <body>   
+        <audio autoplay id="backgroundMusic">
+            <source src="{{asset('music/backgroundmusic.mp3')}}" type="audio/mpeg">
+        </audio>
+
+        <script type="text/javascript">
+            let music = document.getElementById("backgroundMusic");
+            music.loop = true;
+        </script>
+    </body>
+</html>
