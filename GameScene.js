@@ -12,8 +12,8 @@ class GameScene extends Phaser.Scene {
 		this.load.audio('reach', 'assets/reach.m4a');
 		
 		this.load.image('ground', 'assets/ground.png');
-		this.load.image('dino-idle', 'assets/dino-idle.png');
-		this.load.image('dino-hurt', 'assets/dino-hurt.png');
+		this.load.image('templerun-idle', 'assets/templerun-idle.png');
+		this.load.image('templerun-hurt', 'assets/templerun-hurt.png');
 		this.load.image('restart', 'assets/restart.png');
 		this.load.image('game-over', 'assets/game-over.png');
 		this.load.image('cloud', 'assets/cloud.png');
@@ -26,12 +26,12 @@ class GameScene extends Phaser.Scene {
 			frameWidth: 20, frameHeight: 40
 		});
 		
-		this.load.spritesheet('dino', 'assets/dino_run.png', {
+		this.load.spritesheet('templerun_run', 'assets/templerun_run.png', {
 			frameWidth: 88,
 			frameHeight: 94
 		});
 		
-		this.load.spritesheet('dino-down', 'assets/dino-down.png', {
+		this.load.spritesheet('templerun_slide', 'assets/templerun_slide.png', {
 			frameWidth: 88,
 			frameHeight: 94
 		});
@@ -62,7 +62,7 @@ class GameScene extends Phaser.Scene {
 		this.hitSound = this.sound.add('hit', {volume : 0.2});
 		this.reachSound = this.sound.add('reach', {volume : 0.2});
 		this.ground = this.add.tileSprite(0, height, 88, 26, 'ground').setOrigin(0, 1);
-		this.dino = this.physics.add.sprite(0, height, 'dino-idle').setCollideWorldBounds(true).setGravityY(5000).setOrigin(0, 1).setBodySize(44, 92).setDepth(1);
+		this.dino = this.physics.add.sprite(0, height, 'templerun-idle').setCollideWorldBounds(true).setGravityY(5000).setOrigin(0, 1).setBodySize(44, 92).setDepth(1);
 		//Hidden object used to start game when space is pressed.
 		this.startTrigger = this.physics.add.sprite(0, 10).setOrigin(0, 1).setImmovable();
 		this.scoreText = this.add.text(width, 0, '00000', {fill : '#535353', font : '900 35px Courier', resolution : 5}).setOrigin(1, 0).setAlpha(0);
@@ -95,7 +95,7 @@ class GameScene extends Phaser.Scene {
 			this.physics.pause();
 			this.isGameRunning = false;
 			this.anims.pauseAll();
-			this.dino.setTexture('dino-hurt');
+			this.dino.setTexture('templerun-hurt');
 			this.respawnTime = 0;
 			this.gameSpeed = 10;
 			this.gameOverScreen.setAlpha(1);
@@ -132,23 +132,24 @@ class GameScene extends Phaser.Scene {
 				this.dino.body.height = 92;
 				this.dino.body.offset.y = 0;
 				this.duckingTimer = 0;
+				this.isDucking = false;
 				this.jumpSound.play();
 				this.dino.setVelocityY(-1600);
-				this.dino.setTexture('dino', 0);
+				this.dino.setTexture('templerun-idle', 0);
                 break;
 			}
 		});
 	}
 	initAnims(){
 		this.anims.create({
-			key: 'dino-run',
-			frames: this.anims.generateFrameNumbers('dino', {start: 0, end: 7}),
+			key: 'templerun_run',
+			frames: this.anims.generateFrameNumbers('templerun_run', {start: 0, end: 9}),
 			frameRate: 10,
 			repeat: -1
 		});
 		this.anims.create({
-			key: 'dino-down-anim',
-			frames: this.anims.generateFrameNumbers('dino-down', {start: 0, end: 1}),
+			key: 'templerun-slide-anim',
+			frames: this.anims.generateFrameNumbers('templerun_slide', {start: 0, end: 9}),
 			frameRate: 10,
 			repeat: -1
 		});
@@ -192,7 +193,7 @@ class GameScene extends Phaser.Scene {
 				callbackScope: this,
 				callback: () => {
 					this.dino.setVelocityX(80);
-					this.dino.play('dino-run', 1);
+					this.dino.play('templerun_run', 1);
 					if(this.ground.width < width){
 						this.ground.width += 17 * 2;
 					}
@@ -279,16 +280,16 @@ class GameScene extends Phaser.Scene {
 		});
 		if (this.dino.body.deltaAbsY() > 0) {
 			this.dino.anims.stop();
-			this.dino.setTexture('dino', 0);
+			this.dino.setTexture('templerun-idle', 0);
 		} 
 		else {
 			if(this.dino.body.height <= 58){
-				this.dino.play('dino-down-anim', true)
+				this.dino.play('templerun-slide-anim', true)
 			}
 			else{
-				this.dino.play('dino-run', true);
+				this.dino.play('templerun_run', true);
 			}
 		}
 	}
 }
-export default GameScene;			
+export default GameScene;
