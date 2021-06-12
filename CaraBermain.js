@@ -19,7 +19,8 @@ class CaraBermain extends Phaser.Scene {
 
 		var teks = this.add.rectangle(350, 155, 500, 50, 0x566d78);
 		teks.setStrokeStyle(3, 0x1a65ac);
-		var text2 = this.add.text(150, 145, 'Player dapat menggunakan spasi untuk lompat.');
+		var text2 = this.add.text(150, 145, 'Player dapat menggunakan arrow atas untuk lompat.');
+		var text3 = this.add.text(160, 145, 'Player dapat menggunakan arrow bawah untuk menunduk.');
 
 		var menuUtama = this.add.rectangle(355, 295, 200, 50, 0x566d78);
 		menuUtama.setStrokeStyle(3, 0x1a65ac);
