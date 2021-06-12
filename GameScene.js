@@ -52,6 +52,8 @@ class GameScene extends Phaser.Scene {
 	create (){
 		//Variable to check is space pressed yet.
 		this.isGameRunning = false;
+		this.isDucking = false;
+		this.duckingTimer = 0;
 		this.gameSpeed = 10;
 		this.respawnTime = 0;
 		this.score = 0;
@@ -61,7 +63,7 @@ class GameScene extends Phaser.Scene {
 		this.reachSound = this.sound.add('reach', {volume : 0.2});
 		this.ground = this.add.tileSprite(0, height, 88, 26, 'ground').setOrigin(0, 1);
 		this.dino = this.physics.add.sprite(0, height, 'dino-idle').setCollideWorldBounds(true).setGravityY(5000).setOrigin(0, 1).setBodySize(44, 92).setDepth(1);
-		//Hidden object used to start game when space is pressed (currently disabled)
+		//Hidden object used to start game when space is pressed.
 		this.startTrigger = this.physics.add.sprite(0, 10).setOrigin(0, 1).setImmovable();
 		this.scoreText = this.add.text(width, 0, '00000', {fill : '#535353', font : '900 35px Courier', resolution : 5}).setOrigin(1, 0).setAlpha(0);
 		this.highscoreText = this.add.text(width, 0, '00000', {fill : '#535353', font : '900 35px Courier', resolution : 5}).setOrigin(1, 0).setAlpha(0);
@@ -109,31 +111,30 @@ class GameScene extends Phaser.Scene {
 			this.physics.resume();
 			this.obstacles.clear(true, true);
 			this.isGameRunning = true;
+			this.isDucking = false;
+			this.duckingTimer = 0;
 			this.gameOverScreen.setAlpha(0);
 			this.anims.resumeAll();
 		});
 		this.input.keyboard.on('keydown', event => {
 			switch (event.code) {
-				case 'Space':
-               	if (!this.dino.body.onFloor() || this.dino.body.velocity.x > 0) { 
-					return; 
-				}  
-				this.dino.body.height = 92;
-				this.dino.body.offset.y = 0;
-				this.jumpSound.play();
-				this.dino.setVelocityY(-1600);
-				this.dino.setTexture('dino', 0);
-                break;
 				case 'ArrowDown':
                	if (!this.dino.body.onFloor() || !this.isGameRunning) { 
 					return; 
-				}  
-				this.dino.body.height = 58;
-				this.dino.body.offset.y = 34;
+				}
+				this.isDucking = true;
+				this.duckingTimer = 12; //1/5 second.
                 break;
 				case 'ArrowUp':
+				if (!this.dino.body.onFloor() || this.dino.body.velocity.x > 0) { 
+					return; 
+				}
 				this.dino.body.height = 92;
 				this.dino.body.offset.y = 0;
+				this.duckingTimer = 0;
+				this.jumpSound.play();
+				this.dino.setVelocityY(-1600);
+				this.dino.setTexture('dino', 0);
                 break;
 			}
 		});
@@ -242,6 +243,22 @@ class GameScene extends Phaser.Scene {
 		if(!this.isGameRunning){
 			return;
 		}
+		if(this.isDucking == true){
+			if(this.dino.body.height != 58 && this.dino.body.offset.y != 34){
+				this.dino.body.height = 58;
+				this.dino.body.offset.y = 34;
+			}
+			this.duckingTimer--;
+		}
+		else{
+			if(this.dino.body.height != 92 && this.dino.body.offset.y != 0){
+				this.dino.body.height = 92;
+				this.dino.body.offset.y = 0;
+			}
+		}
+		if(this.duckingTimer == 0 && this.isDucking == true){
+			this.isDucking = false;
+		}
 		this.ground.tilePositionX += this.gameSpeed;
 		Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
 		Phaser.Actions.IncX(this.environment.getChildren(), -0.5);
@@ -272,10 +289,6 @@ class GameScene extends Phaser.Scene {
 				this.dino.play('dino-run', true);
 			}
 		}
-	}
-	end() {
-		this.physics.pause();
-		this.gameOver = true;
 	}
 }
 export default GameScene;			
