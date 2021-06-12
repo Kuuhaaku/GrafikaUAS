@@ -26,13 +26,13 @@ class GameScene extends Phaser.Scene {
 			frameWidth: 20, frameHeight: 40
 		});
 		
-		this.load.spritesheet('dino', 'assets/dino-run.png', {
+		this.load.spritesheet('dino', 'assets/dino_run.png', {
 			frameWidth: 88,
 			frameHeight: 94
 		});
 		
 		this.load.spritesheet('dino-down', 'assets/dino-down.png', {
-			frameWidth: 118,
+			frameWidth: 88,
 			frameHeight: 94
 		});
 		
@@ -142,7 +142,7 @@ class GameScene extends Phaser.Scene {
 	initAnims(){
 		this.anims.create({
 			key: 'dino-run',
-			frames: this.anims.generateFrameNumbers('dino', {start: 2, end: 3}),
+			frames: this.anims.generateFrameNumbers('dino', {start: 0, end: 7}),
 			frameRate: 10,
 			repeat: -1
 		});
