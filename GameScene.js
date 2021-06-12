@@ -7,9 +7,9 @@ class GameScene extends Phaser.Scene {
 	}
 	
 	preload (){
-		// this.load.audio('jump', 'assets/jump.m4a');
-		// this.load.audio('hit', 'assets/hit.m4a');
-		// this.load.audio('reach', 'assets/reach.m4a');
+		this.load.audio('jump', 'assets/jump.m4a');
+		this.load.audio('hit', 'assets/hit.m4a');
+		this.load.audio('reach', 'assets/reach.m4a');
 		
 		this.load.image('ground', 'assets/ground.png');
 		this.load.image('dino-idle', 'assets/dino-idle.png');
