@@ -1,2 +1,2 @@
 # GrafikaUAS
-tes
+test
