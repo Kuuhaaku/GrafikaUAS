@@ -123,7 +123,7 @@ class GameScene extends Phaser.Scene {
 					return; 
 				}
 				this.isDucking = true;
-				this.duckingTimer = 12; //1/5 second.
+				this.duckingTimer = 25; //1/5 second.
                 break;
 				case 'ArrowUp':
 				if (!this.dino.body.onFloor() || this.dino.body.velocity.x > 0) { 
