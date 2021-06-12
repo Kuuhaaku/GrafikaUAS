@@ -14,7 +14,7 @@ class CaraBermain extends Phaser.Scene {
 
 		var teks2 = this.add.rectangle(355, 57, 150, 50, 0x696969);
 		teks2.setStrokeStyle(3, 0x1a65ac);
-		var text = this.add.text(300, 50, 'Cara Bermain');
+		var text = this.add.text(300, 50, 'Cara Bermain'); 
 		
 
 		var teks = this.add.rectangle(350, 155, 500, 50, 0x566d78);

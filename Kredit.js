@@ -14,7 +14,7 @@ class Kredit extends Phaser.Scene {
 
 		var teks2 = this.add.rectangle(355, 57, 150, 50, 0x696969);
 		teks2.setStrokeStyle(3, 0x1a65ac);
-		var text = this.add.text(310, 50, 'Kelompok 3');
+		var text = this.add.text(310, 50, 'Kelompok 3'); 
 		
 
 		var teks = this.add.rectangle(350, 183, 500, 100, 0x566d78);
