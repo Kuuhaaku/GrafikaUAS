@@ -1,4 +1,3 @@
-
 class CaraBermain extends Phaser.Scene {
 	
 	constructor() {
