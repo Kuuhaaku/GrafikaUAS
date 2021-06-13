@@ -17,13 +17,13 @@ class Kredit extends Phaser.Scene {
 		var text = this.add.text(310, 50, 'Kelompok 3'); 
 		
 
-		var teks = this.add.rectangle(350, 183, 500, 100, 0x566d78);
+		var teks = this.add.rectangle(350, 183, 500, 120, 0x566d78);
 		teks.setStrokeStyle(3, 0x1a65ac);
 		var text2 = this.add.text(300, 135, 'Bobbi Setiawan');
 		var text3 = this.add.text(275, 155, 'Kevin Tanusa Devara');
 		var text4 = this.add.text(290, 175, 'Renaldi Fernando');
 		var text5 = this.add.text(330, 195, 'Yordan');
-		var text6 = this.add.text(290, 215, 'Informatika 2018');
+		var text6 = this.add.text(290, 225, 'Informatika 2018');
 
 		var menuUtama = this.add.rectangle(355, 295, 200, 50, 0x566d78);
 		menuUtama.setStrokeStyle(3, 0x1a65ac);
