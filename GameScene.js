@@ -11,6 +11,7 @@ class GameScene extends Phaser.Scene {
 		this.load.audio('hit', 'assets/hit.m4a');
 		this.load.audio('reach', 'assets/reach.m4a');
 		
+		this.load.image('gamebg', 'assets/background.png');
 		this.load.image('ground', 'assets/ground.png');
 		this.load.image('templerun-idle', 'assets/templerun-idle.png');
 		this.load.image('templerun-hurt', 'assets/templerun-hurt.png');
@@ -36,17 +37,35 @@ class GameScene extends Phaser.Scene {
 			frameHeight: 94
 		});
 		
-		this.load.spritesheet('enemy-bird', 'assets/enemy-bird.png', {
-			frameWidth: 92,
-			frameHeight: 77
+		this.load.spritesheet('enemy-bird', 'assets/enemy-vulture.png', {
+			frameWidth: 48,
+			frameHeight: 48
 		});
-		
-		this.load.image('obstacle-1', 'assets/cactuses_small_1.png');
-		this.load.image('obstacle-2', 'assets/cactuses_small_2.png');
-		this.load.image('obstacle-3', 'assets/cactuses_small_3.png');
-		this.load.image('obstacle-4', 'assets/cactuses_big_1.png');
-		this.load.image('obstacle-5', 'assets/cactuses_big_2.png');
-		this.load.image('obstacle-6', 'assets/cactuses_big_3.png');
+
+		this.load.spritesheet('obstacle-1', 'assets/Deceased_walk.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
+
+		this.load.spritesheet('obstacle-2', 'assets/Hyena_walk.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
+
+		this.load.spritesheet('obstacle-3', 'assets/Mummy_walk.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
+
+		this.load.spritesheet('obstacle-4', 'assets/Scorpio_walk.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
+
+		this.load.spritesheet('obstacle-5', 'assets/Snake_walk.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
 	}
 	
 	create (){
@@ -61,6 +80,8 @@ class GameScene extends Phaser.Scene {
 		this.jumpSound = this.sound.add('jump', {volume : 0.2});
 		this.hitSound = this.sound.add('hit', {volume : 0.2});
 		this.reachSound = this.sound.add('reach', {volume : 0.2});
+		this.bg = this.add.sprite(0, 0, 'gamebg');
+		this.bg.setOrigin(0,0);
 		this.ground = this.add.tileSprite(0, height, 88, 26, 'ground').setOrigin(0, 1);
 		this.dino = this.physics.add.sprite(0, height, 'templerun-idle').setCollideWorldBounds(true).setGravityY(5000).setOrigin(0, 1).setBodySize(44, 92).setDepth(1);
 		//Hidden object used to start game when space is pressed.
@@ -155,26 +176,58 @@ class GameScene extends Phaser.Scene {
 		});
 		this.anims.create({
 			key: 'enemy-bird-fly',
-			frames: this.anims.generateFrameNumbers('enemy-bird', {start: 0, end: 1}),
+			frames: this.anims.generateFrameNumbers('enemy-bird', {start: 0, end: 3}),
+			frameRate: 6,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'obstacle-anim-1',
+			frames: this.anims.generateFrameNumbers('obstacle-1', {start: 0, end: 5}),
+			frameRate: 6,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'obstacle-anim-2',
+			frames: this.anims.generateFrameNumbers('obstacle-2', {start: 0, end: 5}),
+			frameRate: 6,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'obstacle-anim-3',
+			frames: this.anims.generateFrameNumbers('obstacle-3', {start: 0, end: 5}),
+			frameRate: 6,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'obstacle-anim-4',
+			frames: this.anims.generateFrameNumbers('obstacle-4', {start: 0, end: 3}),
+			frameRate: 6,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'obstacle-anim-5',
+			frames: this.anims.generateFrameNumbers('obstacle-5', {start: 0, end: 3}),
 			frameRate: 6,
 			repeat: -1
 		});
 	}
 	placeObstacle(){
 		const{width, height} = this.game.config;
-		const obstacleNum = Math.floor(Math.random() * 7) + 1;
+		const obstacleNum = Math.floor(Math.random() * 6) + 1;
 		const distance = Phaser.Math.Between(600, 900);
 		let obstacle;
-		if(obstacleNum > 6){
-			const enemyHeight = [22,50];
+		if(obstacleNum > 5){
+			const enemyHeight = [40,75];
 			var birdHeight = height - enemyHeight[Math.floor(Math.random() * 2)];
 			obstacle = this.obstacles.create(width + distance, birdHeight, 'enemy-bird');
 			obstacle.play('enemy-bird-fly', 1);
 			obstacle.body.height = obstacle.body.height / 1.5;
 		}
 		else{
-			var obstacleName = "obstacle-" + obstacleNum; 
-			obstacle = this.obstacles.create(width + distance, height, obstacleName);
+			var obstacleName = "obstacle-" + obstacleNum;
+			var obstacleAnimName = "obstacle-anim-" + obstacleNum;
+			obstacle = this.obstacles.create(width + distance, height - 10, obstacleName);
+			obstacle.play(obstacleAnimName, 1);
 			obstacle.body.offset.y = 10;
 		}
 		obstacle.setOrigin(0, 1).setImmovable();
