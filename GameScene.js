@@ -82,7 +82,7 @@ class GameScene extends Phaser.Scene {
 		this.reachSound = this.sound.add('reach', {volume : 0.2});
 		this.bg = this.add.sprite(0, 0, 'gamebg');
 		this.bg.setOrigin(0,0);
-		this.ground = this.add.tileSprite(0, height, 88, 26, 'ground').setOrigin(0, 1);
+		this.ground = this.add.tileSprite(0, height, 88, 6, 'ground').setOrigin(0, 1);
 		this.dino = this.physics.add.sprite(0, height, 'templerun-idle').setCollideWorldBounds(true).setGravityY(5000).setOrigin(0, 1).setBodySize(44, 92).setDepth(1);
 		//Hidden object used to start game when space is pressed.
 		this.startTrigger = this.physics.add.sprite(0, 10).setOrigin(0, 1).setImmovable();
