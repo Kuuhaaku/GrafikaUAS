@@ -266,7 +266,7 @@ class GameScene extends Phaser.Scene {
 		else{
 			var obstacleName = "obstacle-" + obstacleNum;
 			var obstacleAnimName = "obstacle-anim-" + obstacleNum;
-			obstacle = this.obstacles.create(width + distance, height - 10, obstacleName);
+			obstacle = this.obstacles.create(width + distance, height - 5, obstacleName);
 			obstacle.play(obstacleAnimName, 1);
 			obstacle.body.offset.y = 10;
 		}
