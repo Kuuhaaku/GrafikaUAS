@@ -153,7 +153,6 @@ class GameScene extends Phaser.Scene {
 			this.dino.body.offset.y = 0;
 			this.physics.resume();
 			this.obstacles.clear(true, true);
-			this.coins.clear(true, true);
 			this.isGameRunning = true;
 			this.isDucking = false;
 			this.duckingTimer = 0;
