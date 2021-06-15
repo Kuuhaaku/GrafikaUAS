@@ -18,7 +18,7 @@ class TitleScene extends Phaser.Scene {
 
 		var teks2 = this.add.rectangle(355, 57, 150, 50, 0x696969);
 		teks2.setStrokeStyle(3, 0x1a65ac);
-		var text = this.add.text(297, 50, 'Among Us Run');
+		var text = this.add.text(292, 50, 'Dodge and Run');
 
 		var startButton = this.add.rectangle(355, 150, 200, 50, 0x566d78);
 		startButton.setStrokeStyle(3, 0x1a65ac);
