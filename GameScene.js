@@ -12,7 +12,7 @@ class GameScene extends Phaser.Scene {
 		this.load.audio('reach', 'assets/reach.m4a');
 		
 		this.load.image('gamebg', 'assets/background.png');
-		this.load.image('ground', 'New asset/ground.png');
+		this.load.image('ground', 'assets/ground.png');
 		this.load.image('templerun-idle', 'assets/templerun-idle.png');
 		this.load.image('templerun-hurt', 'assets/templerun-hurt.png');
 		this.load.image('restart', 'assets/restart.png');
