@@ -132,6 +132,7 @@ class GameScene extends Phaser.Scene {
 			this.highscoreText.setText('HI ' + newScore);
 			this.highscoreText.setAlpha(1);
 			this.physics.pause();
+			this.coins.clear(true, true);
 			this.isGameRunning = false;
 			this.anims.pauseAll();
 			this.dino.setTexture('templerun-hurt');
@@ -275,7 +276,7 @@ class GameScene extends Phaser.Scene {
 	placeCoin(){
 		const{width, height} = this.game.config;
 		const coinNum = Math.floor(Math.random() * 3) + 1;
-		const distance = Phaser.Math.Between(600, 900);
+		const distance = Phaser.Math.Between(600, 1000);
 		const coinHeight = [40,80,120,160];
 		var coinFinalHeight = height - coinHeight[Math.floor(Math.random() * 4)];
 		let coin;
@@ -393,7 +394,7 @@ class GameScene extends Phaser.Scene {
 		Phaser.Actions.IncX(this.coins.getChildren(), -this.gameSpeed);
 		Phaser.Actions.IncX(this.environment.getChildren(), -0.5);
 		this.respawnTime += delta * this.gameSpeed * 0.08;
-		if(this.respawnTime >= 1150 && this.coinPlaced == false){
+		if(this.respawnTime >= 1000 && this.coinPlaced == false){
 			this.placeCoin();
 			this.coinPlaced = true;
 		}
@@ -401,7 +402,7 @@ class GameScene extends Phaser.Scene {
 			this.placeObstacle();
 			this.obstaclePlaced = true;
 		}
-		else if(this.respawnTime >= 1850){
+		else if(this.respawnTime >= 2000){
 			this.placeCoin();
 			this.obstaclePlaced = false;
 			this.coinPlaced = false;
