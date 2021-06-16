@@ -43,18 +43,18 @@ class GameScene extends Phaser.Scene {
 		});
 
 		this.load.spritesheet('obstacle-1', 'assets/Deceased_walk.png', {
-			frameWidth: 48,
-			frameHeight: 48
+			frameWidth: 96,
+			frameHeight: 96
 		});
 
 		this.load.spritesheet('obstacle-2', 'assets/Hyena_walk.png', {
-			frameWidth: 48,
-			frameHeight: 48
+			frameWidth: 96,
+			frameHeight: 96
 		});
 
 		this.load.spritesheet('obstacle-3', 'assets/Mummy_walk.png', {
-			frameWidth: 48,
-			frameHeight: 48
+			frameWidth: 96,
+			frameHeight: 96
 		});
 
 		this.load.spritesheet('obstacle-4', 'assets/Scorpio_walk.png', {
@@ -66,12 +66,29 @@ class GameScene extends Phaser.Scene {
 			frameWidth: 48,
 			frameHeight: 48
 		});
+
+		this.load.spritesheet('coin-1', 'assets/bronze_coin.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
+
+		this.load.spritesheet('coin-2', 'assets/silver_coin.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
+
+		this.load.spritesheet('coin-3', 'assets/gold_coin.png', {
+			frameWidth: 48,
+			frameHeight: 48
+		});
 	}
 	
 	create (){
 		//Variable to check is space pressed yet.
 		this.isGameRunning = false;
 		this.isDucking = false;
+		this.obstaclePlaced = false;
+		this.coinPlaced = false;
 		this.duckingTimer = 0;
 		this.gameSpeed = 10;
 		this.respawnTime = 0;
@@ -100,6 +117,7 @@ class GameScene extends Phaser.Scene {
 		this.environment.setAlpha(0);
 		this.gameOverScreen.add([this.gameOverText, this.restart]);
 		this.obstacles = this.physics.add.group();
+		this.coins = this.physics.add.group();
 		this.initAnims();
 		this.initColliders();
 		this.initControlls();
@@ -114,6 +132,7 @@ class GameScene extends Phaser.Scene {
 			this.highscoreText.setText('HI ' + newScore);
 			this.highscoreText.setAlpha(1);
 			this.physics.pause();
+			this.coins.clear(true, true);
 			this.isGameRunning = false;
 			this.anims.pauseAll();
 			this.dino.setTexture('templerun-hurt');
@@ -122,7 +141,10 @@ class GameScene extends Phaser.Scene {
 			this.gameOverScreen.setAlpha(1);
 			this.score = 0;
 			this.hitSound.play();
-		}, null, this)
+		}, null, this);
+		this.physics.add.overlap(this.dino, this.coins, this.collectCoin, null, this);
+		this.physics.add.overlap(this.obstacles, this.coins, this.removeCoin, null, this);
+		this.physics.add.overlap(this.coins, this.coins, this.removeExtraCoin, null, this);
 	}
 	initControlls(){
 		this.restart.on('pointerdown', () => {
@@ -144,7 +166,7 @@ class GameScene extends Phaser.Scene {
 					return; 
 				}
 				this.isDucking = true;
-				this.duckingTimer = 25; //1/5 second.
+				this.duckingTimer = 25; //5/12 second.
                 break;
 				case 'ArrowUp':
 				if (!this.dino.body.onFloor() || this.dino.body.velocity.x > 0) { 
@@ -170,7 +192,7 @@ class GameScene extends Phaser.Scene {
 		});
 		this.anims.create({
 			key: 'templerun-slide-anim',
-			frames: this.anims.generateFrameNumbers('templerun_slide', {start: 0, end: 9}),
+			frames: this.anims.generateFrameNumbers('templerun_slide', {start: 0, end: 8}),
 			frameRate: 10,
 			repeat: -1
 		});
@@ -210,6 +232,24 @@ class GameScene extends Phaser.Scene {
 			frameRate: 6,
 			repeat: -1
 		});
+		this.anims.create({
+			key: 'coin-anim-1',
+			frames: this.anims.generateFrameNumbers('coin-1', {start: 0, end: 9}),
+			frameRate: 10,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'coin-anim-2',
+			frames: this.anims.generateFrameNumbers('coin-2', {start: 0, end: 9}),
+			frameRate: 10,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'coin-anim-3',
+			frames: this.anims.generateFrameNumbers('coin-3', {start: 0, end: 9}),
+			frameRate: 10,
+			repeat: -1
+		});
 	}
 	placeObstacle(){
 		const{width, height} = this.game.config;
@@ -217,8 +257,8 @@ class GameScene extends Phaser.Scene {
 		const distance = Phaser.Math.Between(600, 900);
 		let obstacle;
 		if(obstacleNum > 5){
-			const enemyHeight = [40,75];
-			var birdHeight = height - enemyHeight[Math.floor(Math.random() * 2)];
+			const enemyHeight = [40,80,120,160];
+			var birdHeight = height - enemyHeight[Math.floor(Math.random() * 4)];
 			obstacle = this.obstacles.create(width + distance, birdHeight, 'enemy-bird');
 			obstacle.play('enemy-bird-fly', 1);
 			obstacle.body.height = obstacle.body.height / 1.5;
@@ -226,11 +266,36 @@ class GameScene extends Phaser.Scene {
 		else{
 			var obstacleName = "obstacle-" + obstacleNum;
 			var obstacleAnimName = "obstacle-anim-" + obstacleNum;
-			obstacle = this.obstacles.create(width + distance, height - 10, obstacleName);
+			obstacle = this.obstacles.create(width + distance, height - 5, obstacleName);
 			obstacle.play(obstacleAnimName, 1);
 			obstacle.body.offset.y = 10;
 		}
 		obstacle.setOrigin(0, 1).setImmovable();
+	}
+	placeCoin(){
+		const{width, height} = this.game.config;
+		const coinNum = Math.floor(Math.random() * 3) + 1;
+		const distance = Phaser.Math.Between(600, 1000);
+		const coinHeight = [40,80,120,160];
+		var coinFinalHeight = height - coinHeight[Math.floor(Math.random() * 4)];
+		let coin;
+		if(coinNum == 1){
+			coin = this.coins.create(width + distance, coinFinalHeight, 'coin-1');
+			coin.play('coin-anim-1', 1);
+			coin.value = 10;
+		}
+		else if(coinNum == 2){
+			coin = this.coins.create(width + distance, coinFinalHeight, 'coin-2');
+			coin.play('coin-anim-2', 1);
+			coin.value = 20;
+		}
+		else{
+			coin = this.coins.create(width + distance, coinFinalHeight, 'coin-3');
+			coin.play('coin-anim-3', 1);
+			coin.value = 30;
+		}
+		coin.body.height = coin.body.height / 1.5;
+		coin.setOrigin(0, 1).setImmovable();
 	}
 	initStartTrigger(){
 		const {width, height} = this.game.config;
@@ -293,6 +358,16 @@ class GameScene extends Phaser.Scene {
 			}
 		});
 	}
+	collectCoin(dino, coin){
+		coin.disableBody(true, true);
+		this.score += coin.value;
+	}
+	removeCoin(obstacle, coin){
+		coin.disableBody(true, true);
+	}
+	removeExtraCoin(coin1, coin2){
+		coin1.disableBody(true, true);
+	}
 	update (time, delta){
 		if(!this.isGameRunning){
 			return;
@@ -315,15 +390,31 @@ class GameScene extends Phaser.Scene {
 		}
 		this.ground.tilePositionX += this.gameSpeed;
 		Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
+		Phaser.Actions.IncX(this.coins.getChildren(), -this.gameSpeed);
 		Phaser.Actions.IncX(this.environment.getChildren(), -0.5);
 		this.respawnTime += delta * this.gameSpeed * 0.08;
-		if(this.respawnTime >= 1500){
+		if(this.respawnTime >= 1000 && this.coinPlaced == false){
+			this.placeCoin();
+			this.coinPlaced = true;
+		}
+		if(this.respawnTime >= 1500 && this.obstaclePlaced == false){
 			this.placeObstacle();
+			this.obstaclePlaced = true;
+		}
+		else if(this.respawnTime >= 2000){
+			this.placeCoin();
+			this.obstaclePlaced = false;
+			this.coinPlaced = false;
 			this.respawnTime = 0;
 		}
 		this.obstacles.getChildren().forEach(obstacle => {
 			if(obstacle.getBounds().right < 0){
 				obstacle.destroy();
+			}
+		});
+		this.coins.getChildren().forEach(coin => {
+			if(coin.getBounds().right < 0){
+				coin.destroy();
 			}
 		});
 		this.environment.getChildren().forEach(env => {
